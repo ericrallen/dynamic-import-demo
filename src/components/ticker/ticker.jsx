@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import TickerGraph from '../graph';
+
 import TickerService from '../../services/ticker';
 
 export default class Ticker extends Component {
@@ -13,6 +15,7 @@ export default class Ticker extends Component {
 
     this.state = {
       tickerData: {},
+      selectedTicker: null,
     };
 
     this.updateTickerData = this.updateTickerData.bind(this);
@@ -20,6 +23,13 @@ export default class Ticker extends Component {
 
   componentWillMount() {
     this.Ticker.connect(this.updateTickerData);
+  }
+
+  loadStockGraph(ticker) {
+    console.log('CLICKED:', ticker);
+    this.setState({
+      selectedTicker: ticker,
+    });
   }
 
   updateTickerData(ticker) {
@@ -34,25 +44,44 @@ export default class Ticker extends Component {
     this.setState({ tickerData });
   }
 
+  renderTickerGraph() {
+    const { selectedTicker } = this.state;
+
+    console.log('RENDER GRAPH:', selectedTicker);
+
+    return (
+      <TickerGraph symbol={selectedTicker} />
+    );
+  }
+
   renderTicker() {
     const { tickerData } = this.state;
 
     return Object.keys(tickerData).map(ticker => (
       <li key={`ticker-${ticker}`}>
-        <strong>{ticker}</strong>
-        : $
-        {tickerData[ticker]}
+        <button type="button" onClick={this.loadStockGraph.bind(this, ticker)}>
+          <strong>{ticker}</strong>
+          : $
+          {tickerData[ticker]}
+        </button>
       </li>
     ));
   }
 
   render() {
+    const { selectedTicker } = this.state;
+
     return (
       <article>
         <h2>Trending Stocks</h2>
         <ul>
+
           {this.renderTicker()}
+
         </ul>
+
+        {selectedTicker && this.renderTickerGraph()}
+
       </article>
     );
   }

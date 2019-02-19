@@ -20,6 +20,12 @@ export default class TickerService {
     this.tick(handler);
   }
 
+  async history() {
+    const response = await fetch(`${this.url}/${this.symbols[0].toLowerCase()}/chart/3m`).then(response => response.json());
+
+    return response;
+  }
+
   tick(handler) {
     const socket = io(this.url);
 
