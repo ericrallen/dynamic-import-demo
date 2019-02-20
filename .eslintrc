@@ -3,6 +3,7 @@
   "parser": "babel-eslint",
   "globals": {
     "document": true,
-    "window": true
+    "window": true,
+    "fetch": true
   }
 }

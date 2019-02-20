@@ -21,7 +21,7 @@ export default class TickerService {
   }
 
   async history() {
-    const response = await fetch(`${this.url}/${this.symbols[0].toLowerCase()}/chart/3m`).then(response => response.json());
+    const response = await fetch(`${this.url}/${this.symbols[0].toLowerCase()}/chart/dynamic`).then(responseData => responseData.json());
 
     return response;
   }

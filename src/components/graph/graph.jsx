@@ -1,53 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { LineChart } from 'react-d3-components';
 
-import TickerService from '../../services/ticker';
+const mapTickerHistoryForLineChart = (symbol, history) => {
+  const values = history.map(({ date, close }) => ({
+    x: new Date(date),
+    y: close,
+  }));
 
-const TICKER_HISTORY_URL = 'https://api.iextrading.com/1.0/stock';
+  return {
+    label: `${symbol} History`,
+    values,
+  };
+};
 
-export default class StockGraph extends Component {
-  constructor(props) {
-    super(props);
-
-    console.log('GRAPH:', props);
-
-    this.state = {
-      history: [],
-      ticker: props.symbol,
-    };
-  }
-
-  componentDidMount() {
-    const { ticker } = this.state;
-
-    this.Ticker = new TickerService([ticker], TICKER_HISTORY_URL);
-
-    this.Ticker.history().then(history => this.setState({ history }));
-  }
-
-  mapTickerHistoryForLineChart() {
-    const { history, ticker } = this.state;
-
-    const values = history.map(({ date, close }) => ({
-      x: new Date(date),
-      y: close,
-    }));
-
-    return {
-      label: `${ticker} History`,
-      values,
-    };
-  }
-
-  render() {
-    const { symbol } = this.props;
-    const { history } = this.state;
-
-    if (symbol && history.length) {
-      return (
+export default function StockGraph({ symbol, history }) {
+  if (symbol && history.length) {
+    return (
+      <aside>
+        <h3>
+          {symbol}
+          &nbsp;Performance
+        </h3>
         <LineChart
-          data={this.mapTickerHistoryForLineChart()}
+          data={mapTickerHistoryForLineChart(symbol, history)}
           width={600}
           height={450}
           xAxis={{ label: 'Date' }}
@@ -59,13 +35,14 @@ export default class StockGraph extends Component {
             bottom: 50,
           }}
         />
-      );
-    }
-
-    return null;
+      </aside>
+    );
   }
+
+  return null;
 }
 
 StockGraph.propTypes = {
   symbol: PropTypes.string.isRequired,
+  history: PropTypes.arrayOf(PropTypes.any).isRequired,
 };

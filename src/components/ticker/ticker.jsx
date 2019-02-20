@@ -5,6 +5,8 @@ import TickerGraph from '../graph';
 
 import TickerService from '../../services/ticker';
 
+const TICKER_HISTORY_URL = 'https://api.iextrading.com/1.0/stock';
+
 export default class Ticker extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +18,7 @@ export default class Ticker extends Component {
     this.state = {
       tickerData: {},
       selectedTicker: null,
+      tickerHistory: {},
     };
 
     this.updateTickerData = this.updateTickerData.bind(this);
@@ -26,7 +29,6 @@ export default class Ticker extends Component {
   }
 
   loadStockGraph(ticker) {
-    console.log('CLICKED:', ticker);
     this.setState({
       selectedTicker: ticker,
     });
@@ -45,13 +47,27 @@ export default class Ticker extends Component {
   }
 
   renderTickerGraph() {
-    const { selectedTicker } = this.state;
+    const { selectedTicker, tickerHistory } = this.state;
 
-    console.log('RENDER GRAPH:', selectedTicker);
+    if (!tickerHistory[selectedTicker]) {
+      const history = new TickerService([selectedTicker], TICKER_HISTORY_URL);
 
-    return (
-      <TickerGraph symbol={selectedTicker} />
-    );
+      history.history().then(({ data }) => {
+        const { tickerHistory: oldTickerHistory } = this.state;
+
+        const newTickerHistory = Object.assign({}, oldTickerHistory, { [selectedTicker]: data });
+
+        this.setState({ tickerHistory: newTickerHistory });
+      });
+    }
+
+    if (selectedTicker && tickerHistory[selectedTicker]) {
+      return (
+        <TickerGraph symbol={selectedTicker} history={tickerHistory[selectedTicker]} />
+      );
+    }
+
+    return null;
   }
 
   renderTicker() {
