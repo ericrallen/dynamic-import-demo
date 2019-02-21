@@ -1,3 +1,5 @@
+require('dotenv').config({ path: './project.env' });
+
 const path = require('path');
 const webpack = require('webpack');
 const Fiber = require('fibers');
@@ -9,6 +11,7 @@ const mode = process.env.NODE_ENV;
 const plugins = [
   new webpack.EnvironmentPlugin([
     'NODE_ENV',
+    'GIPHY_API_KEY',
   ]),
   new HtmlWebpackPlugin({
     title: 'Dynamic Importing with React.lazy()',

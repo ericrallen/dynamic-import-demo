@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import Intro from '../components/intro';
 import Ticker from '../components/ticker';
 
@@ -36,7 +38,11 @@ export default class Home extends Component {
     return (
       <section>
         <Intro />
+
+        <Link to="/other">Get a Random GIF</Link>
+
         {this.renderTickerButton()}
+
         {(showTicker) ? <Ticker /> : ''}
       </section>
     );
