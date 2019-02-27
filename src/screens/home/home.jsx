@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import Intro from '../components/intro';
-import Ticker from '../components/ticker';
+import Intro from '../../components/intro';
+import Ticker from '../../components/ticker';
+
+const styles = require('./home.scss');
 
 export default class Home extends Component {
   constructor(props) {
@@ -36,14 +38,22 @@ export default class Home extends Component {
     const { showTicker } = this.state;
 
     return (
-      <section>
+      <section className={styles.homepage}>
         <Intro />
 
-        <Link to="/other">Get a Random GIF</Link>
-
-        {this.renderTickerButton()}
+        <nav className={styles.nav}>
+          <ul>
+            <li>
+              <Link to="/other">Get a Random GIF</Link>
+            </li>
+            <li>
+              {this.renderTickerButton()}
+            </li>
+          </ul>
+        </nav>
 
         {(showTicker) ? <Ticker /> : ''}
+
       </section>
     );
   }

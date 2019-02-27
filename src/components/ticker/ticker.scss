@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.ticker {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 25%;
+  }
+}
+
+.graph {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: 75%;
+  }
+}
+
+.list {
+  padding-left: 0;
+  margin-left: 0;
+  list-style: none;
+}
+
+.listItem {
+  margin-bottom: 10px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 5px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.button {
+  background: none;
+  border: none;
+
+  strong {
+    text-decoration: underline;
+  }
+
+  cursor: pointer;
+  appearance: none;
+}

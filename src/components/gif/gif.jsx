@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '../button';
+
 import GifService from '../../services/gif';
 
 export default class Gif extends Component {
@@ -18,9 +20,17 @@ export default class Gif extends Component {
     const serviceConfig = { tag };
 
     this.service = new GifService(serviceConfig);
+
+    this.retrieveGif = this.retrieveGif.bind(this);
   }
 
   componentWillMount() {
+    this.retrieveGif();
+  }
+
+  retrieveGif() {
+    this.setState({ imageData: { images: {} } });
+
     this.service.get().then(({ data: imageData }) => {
       this.setState({ imageData });
     });
@@ -37,11 +47,17 @@ export default class Gif extends Component {
       } = images.downsized_large;
 
       return (
-        <img src={url} height={height} width={width} alt=" " />
+        <React.Fragment>
+          <img src={url} height={height} width={width} alt=" " />
+
+          <Button label="Get a new GIF" action={this.retrieveGif} />
+        </React.Fragment>
       );
     }
 
-    return null;
+    return (
+      <p>Loading...</p>
+    );
   }
 }
 

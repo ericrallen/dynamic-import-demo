@@ -7,6 +7,8 @@ import Routes from './routes';
 
 import 'sanitize.css';
 
+import './styles/app.scss';
+
 render(
   (
     <Router>

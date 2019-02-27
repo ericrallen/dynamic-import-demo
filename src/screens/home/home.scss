@@ -1,0 +1,25 @@
+.homepage {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+
+  ul {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  li {
+    display: inline-block;
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

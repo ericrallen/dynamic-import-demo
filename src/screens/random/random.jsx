@@ -2,9 +2,9 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 
-import Gif from '../components/gif';
+import Gif from '../../components/gif';
 
-export default function Other() {
+export default function Random() {
   const gifTag = 'Hackerman';
 
   return (

@@ -2,10 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import TickerGraph from '../graph';
+import Button from '../button';
 
 import TickerService from '../../services/ticker';
 
-const TICKER_HISTORY_URL = 'https://api.iextrading.com/1.0/stock';
+const styles = require('./ticker.scss');
+
+const generateTickerLabel = (symbol, price) => (
+  <React.Fragment>
+    <strong>{symbol}</strong>
+    :&nbsp;$
+    {price}
+  </React.Fragment>
+);
 
 export default class Ticker extends Component {
   constructor(props) {
@@ -22,6 +31,7 @@ export default class Ticker extends Component {
     };
 
     this.updateTickerData = this.updateTickerData.bind(this);
+    this.loadStockGraph = this.loadStockGraph.bind(this);
   }
 
   componentWillMount() {
@@ -50,7 +60,7 @@ export default class Ticker extends Component {
     const { selectedTicker, tickerHistory } = this.state;
 
     if (!tickerHistory[selectedTicker]) {
-      const history = new TickerService([selectedTicker], TICKER_HISTORY_URL);
+      const history = new TickerService([selectedTicker], process.env.TICKER_HISTORY_URL);
 
       history.history().then(({ data }) => {
         const { tickerHistory: oldTickerHistory } = this.state;
@@ -73,32 +83,39 @@ export default class Ticker extends Component {
   renderTicker() {
     const { tickerData } = this.state;
 
-    return Object.keys(tickerData).map(ticker => (
-      <li key={`ticker-${ticker}`}>
-        <button type="button" onClick={this.loadStockGraph.bind(this, ticker)}>
-          <strong>{ticker}</strong>
-          : $
-          {tickerData[ticker]}
-        </button>
-      </li>
-    ));
+    if (tickerData) {
+      return Object.keys(tickerData).map(ticker => (
+        <li className={styles.listItem} key={`ticker-${ticker}`}>
+          <Button
+            className={styles.button}
+            label={generateTickerLabel(ticker, tickerData[ticker])}
+            action={() => this.loadStockGraph(ticker)}
+          />
+        </li>
+      ));
+    }
+
+    return null;
   }
 
   render() {
     const { selectedTicker } = this.state;
 
     return (
-      <article>
-        <h2>Trending Stocks</h2>
-        <ul>
+      <main className={styles.container}>
+        <article className={styles.ticker}>
+          <h2>Trending Stocks</h2>
 
-          {this.renderTicker()}
+          <ul className={styles.list}>
+            {this.renderTicker()}
+          </ul>
+        </article>
 
-        </ul>
+        <aside className={styles.graph}>
+          {selectedTicker && this.renderTickerGraph()}
+        </aside>
 
-        {selectedTicker && this.renderTickerGraph()}
-
-      </article>
+      </main>
     );
   }
 }

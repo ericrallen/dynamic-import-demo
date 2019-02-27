@@ -12,6 +12,7 @@ const plugins = [
   new webpack.EnvironmentPlugin([
     'NODE_ENV',
     'GIPHY_API_KEY',
+    'TICKER_HISTORY_URL',
   ]),
   new HtmlWebpackPlugin({
     title: 'Dynamic Importing with React.lazy()',
@@ -65,7 +66,7 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              soruceMap: true,
+              sourceMap: true,
               modules: true,
             },
           },
