@@ -18,7 +18,7 @@ export default function Button({
 
 Button.propTypes = {
   action: PropTypes.func.isRequired,
-  label: PropTypes.oneOf([PropTypes.string, PropTypes.object]).isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   type: PropTypes.string,
 };
 

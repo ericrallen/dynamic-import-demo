@@ -5,6 +5,8 @@ import Button from '../button';
 
 import GifService from '../../services/gif';
 
+const styles = require('./gif.scss');
+
 export default class Gif extends Component {
   constructor(props) {
     super(props);
@@ -48,15 +50,15 @@ export default class Gif extends Component {
 
       return (
         <React.Fragment>
-          <img src={url} height={height} width={width} alt=" " />
+          <Button className={styles.button} label="Get a new GIF" action={this.retrieveGif} />
 
-          <Button label="Get a new GIF" action={this.retrieveGif} />
+          <img className={styles.gif} src={url} height={height} width={width} alt=" " />
         </React.Fragment>
       );
     }
 
     return (
-      <p>Loading...</p>
+      <p className={styles.loading}>Loading...</p>
     );
   }
 }

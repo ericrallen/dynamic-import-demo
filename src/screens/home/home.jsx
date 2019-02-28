@@ -1,11 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import Intro from '../../components/intro';
 import Ticker from '../../components/ticker';
+import Nav from '../../components/nav';
 
-const styles = require('./home.scss');
+const styles = require('../screen.scss');
+
+const renderSubheading = () => (
+  <Fragment>
+    We will explore some usecases for
+    &nbsp;
+    <code>React.lazy()</code>
+    &nbsp;
+    and dynamic
+    &nbsp;
+    <code>import</code>
+    s below.
+  </Fragment>
+);
 
 export default class Home extends Component {
   constructor(props) {
@@ -38,19 +52,13 @@ export default class Home extends Component {
     const { showTicker } = this.state;
 
     return (
-      <section className={styles.homepage}>
-        <Intro />
+      <section className={styles.screen}>
+        <Intro heading="Dynamic Import Demo" subheading={renderSubheading()} />
 
-        <nav className={styles.nav}>
-          <ul>
-            <li>
-              <Link to="/other">Get a Random GIF</Link>
-            </li>
-            <li>
-              {this.renderTickerButton()}
-            </li>
-          </ul>
-        </nav>
+        <Nav>
+          <Link to="/other">Get a Random GIF</Link>
+          {this.renderTickerButton()}
+        </Nav>
 
         {(showTicker) ? <Ticker /> : ''}
 
