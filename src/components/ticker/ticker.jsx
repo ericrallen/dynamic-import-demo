@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
 
-import TickerGraph from '../graph';
 import Button from '../button';
+import Async from '../async';
 
 import TickerService from '../../services/ticker';
+
+const TickerGraph = Async(lazy(() => import(/* webpackChunkName: "ticker-graph" */ '../graph')));
 
 const styles = require('./ticker.scss');
 
@@ -34,7 +36,7 @@ export default class Ticker extends Component {
     this.loadStockGraph = this.loadStockGraph.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.Ticker.connect(this.updateTickerData);
   }
 
