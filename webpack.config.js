@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './project.env' });
+require('multi-env')();
 
 const path = require('path');
 const webpack = require('webpack');
@@ -30,22 +30,7 @@ const plugins = [
     chunkFilename: 'assets/[id].[contenthash].css'
   }),
   new OptimizeCSSAssetsPlugin({}),
-  new webpack.HashedModuleIdsPlugin(),
-  new webpack.NamedChunksPlugin(chunk => {
-    if (chunk.name) {
-      return chunk.name;
-    }
-
-    return [...chunk._modules]
-      .map(module =>
-        path.relative(
-          module.context,
-          module.userRequest.substring(0, module.userRequest.lastIndexOf('.'))
-        )
-      )
-      .join('_')
-    ;
-  })
+  new webpack.HashedModuleIdsPlugin()
 ];
 
 if (analysisMode) {
