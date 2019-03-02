@@ -26,7 +26,7 @@ export default class Gif extends Component {
     this.retrieveGif = this.retrieveGif.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.retrieveGif();
   }
 

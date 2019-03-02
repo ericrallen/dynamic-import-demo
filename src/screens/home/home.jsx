@@ -1,10 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, lazy } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import Intro from '../../components/intro';
-import Ticker from '../../components/ticker';
 import Nav from '../../components/nav';
+import Async from '../../components/async';
+
+const Ticker = Async(lazy(() => import(/* webpackChunkName: "ticker" */ '../../components/ticker')));
 
 const styles = require('../screen.scss');
 

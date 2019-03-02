@@ -5,8 +5,14 @@ const webpack = require('webpack');
 const Fiber = require('fibers');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const mode = process.env.NODE_ENV;
+
+const devMode = mode !== 'production';
+
+const analysisMode = mode === 'analyze';
 
 const plugins = [
   new webpack.EnvironmentPlugin([
@@ -16,23 +22,44 @@ const plugins = [
   ]),
   new HtmlWebpackPlugin({
     title: 'Dynamic Importing with React.lazy()',
-    template: path.resolve(__dirname, './src/index.template.html'),
+    template: path.resolve(__dirname, './src/static/index.template.html'),
     filename: 'index.html',
   }),
+  new MiniCssExtractPlugin({
+    filename: 'assets/[name].[contenthash].css',
+    chunkFilename: 'assets/[id].[contenthash].css'
+  }),
+  new OptimizeCSSAssetsPlugin({}),
+  new webpack.HashedModuleIdsPlugin(),
+  new webpack.NamedChunksPlugin(chunk => {
+    if (chunk.name) {
+      return chunk.name;
+    }
+
+    return [...chunk._modules]
+      .map(module =>
+        path.relative(
+          module.context,
+          module.userRequest.substring(0, module.userRequest.lastIndexOf('.'))
+        )
+      )
+      .join('_')
+    ;
+  })
 ];
 
-if (mode === 'analyze') {
+if (analysisMode) {
   const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
   plugins.push(new BundleAnalyzerPlugin());
 }
 
-if (mode !== 'development') {
+if (!devMode) {
   plugins.push(new CleanWebpackPlugin([path.resolve('./dist')]));
 }
 
 module.exports = {
-  mode: (mode === 'analyze') ? 'production' : mode,
+  mode: (analysisMode) ? 'production' : mode,
   plugins,
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
@@ -61,7 +88,7 @@ module.exports = {
         test: /\.s?css$/,
         use: [
           {
-            loader: 'style-loader',
+            loader: (devMode) ? 'style-loader' : MiniCssExtractPlugin.loader,
           },
           {
             loader: 'css-loader',
@@ -107,11 +134,14 @@ module.exports = {
   optimization: {
     runtimeChunk: 'single',
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'all'
     },
+    minimizer: [
+      new OptimizeCSSAssetsPlugin({})
+    ]
   },
   devServer: {
     port: 4501,
-    open: true,
+    open: true
   },
 };
