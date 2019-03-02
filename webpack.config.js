@@ -44,7 +44,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'assets/[name].[hash].bundle.js',
     chunkFilename: 'assets/[name].[contenthash].bundle.js',
-    publicPath: 'http://localhost:4501',
+    publicPath: 'http://localhost:4501/',
   },
   module: {
     rules: [
@@ -89,6 +89,19 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+              outputPath: 'assets',
+              useRelativePath: false
+            }
+          }
+        ]
+      }
     ],
   },
   optimization: {
