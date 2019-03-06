@@ -23,6 +23,10 @@ export default class TickerService {
     this.tick(handler);
   }
 
+  disconnect() {
+    this.socket.disconnect();
+  }
+
   async history() {
     const response = await fetch(`${this.url}/${this.symbols[0].toLowerCase()}/chart/dynamic`).then(responseData => responseData.json());
 
@@ -30,10 +34,10 @@ export default class TickerService {
   }
 
   tick(handler) {
-    const socket = io(this.url);
+    this.socket = io(this.url);
 
     // listen for data from socket
-    socket.on('message', (data) => {
+    this.socket.on('message', (data) => {
       const formattedData = JSON.parse(data);
 
       // return data to handler
@@ -43,8 +47,8 @@ export default class TickerService {
     });
 
     // subscribe to tickers
-    socket.on('connect', () => {
-      socket.emit('subscribe', this.symbols.join(','));
+    this.socket.on('connect', () => {
+      this.socket.emit('subscribe', this.symbols.join(','));
     });
   }
 }

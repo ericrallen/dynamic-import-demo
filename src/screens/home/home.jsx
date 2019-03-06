@@ -2,9 +2,14 @@ import React, { Component, Fragment, lazy } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import Async from '../../components/async';
 import Intro from '../../components/intro';
 import Nav from '../../components/nav';
-import Async from '../../components/async';
+
+import lazyWithPreload from '../../utils/lazy-with-preload';
+
+// allow us to preload our lazy Component when we're ready
+const LazyTickerGraph = lazyWithPreload(() => import(/* webpackChunkName: "ticker-graph" */ '../../components/graph'));
 
 // lazy load the Ticker Component
 const Ticker = Async(lazy(() => import(/* webpackChunkName: "ticker" */ '../../components/ticker')));
@@ -39,6 +44,9 @@ export default class Home extends Component {
     const { showTicker } = this.state;
 
     this.setState({ showTicker: !showTicker });
+
+    // preload our TickerGraph bundle so it's ready when the user wants to interact with it
+    LazyTickerGraph.preload();
   }
 
   renderTickerButton() {

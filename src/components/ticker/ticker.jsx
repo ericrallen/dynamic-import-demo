@@ -1,14 +1,13 @@
-import React, { Component, Suspense } from 'react';
+import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
 
+import Async from '../async';
 import Button from '../button';
-import Loading from '../loading';
 
-import lazyWithPreload from '../../utils/lazy-with-preload';
 import TickerService from '../../services/ticker';
 
 // allow us to preload our lazy Component when we're ready
-const TickerGraph = lazyWithPreload(() => import(/* webpackChunkName: "ticker-graph" */ '../graph'));
+const TickerGraph = Async(lazy(() => import(/* webpackChunkName: "ticker-graph" */ '../graph')));
 
 const styles = require('./ticker.scss');
 
@@ -40,9 +39,10 @@ export default class Ticker extends Component {
 
   componentDidMount() {
     this.Ticker.connect(this.updateTickerData);
+  }
 
-    // preload our graph for ticker history so it's ready to render when the user wants it
-    TickerGraph.preload();
+  componentWillUnmount() {
+    this.Ticker.disconnect();
   }
 
   loadStockGraph(ticker) {
@@ -82,9 +82,7 @@ export default class Ticker extends Component {
       return (
         // we still need <Suspense /> just in case the user tries to load this before
         // we have downloaded and processed its chunk
-        <Suspense fallback={<Loading />}>
-          <TickerGraph symbol={selectedTicker} history={tickerHistory[selectedTicker]} />
-        </Suspense>
+        <TickerGraph symbol={selectedTicker} history={tickerHistory[selectedTicker]} />
       );
     }
 
