@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../button';
+import Loading from '../loading';
 
 import GifService from '../../services/gif';
 
@@ -58,7 +59,7 @@ export default class Gif extends Component {
     }
 
     return (
-      <p className={styles.loading}>Loading...</p>
+      <Loading />
     );
   }
 }

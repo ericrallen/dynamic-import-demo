@@ -6,6 +6,7 @@ import Intro from '../../components/intro';
 import Nav from '../../components/nav';
 import Async from '../../components/async';
 
+// lazy load the Ticker Component
 const Ticker = Async(lazy(() => import(/* webpackChunkName: "ticker" */ '../../components/ticker')));
 
 const styles = require('../screen.scss');
